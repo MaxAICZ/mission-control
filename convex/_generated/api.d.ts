@@ -11,6 +11,7 @@
 import type * as agentActivity from "../agentActivity.js";
 import type * as api_ from "../api.js";
 import type * as calendar from "../calendar.js";
+import type * as calendarSync from "../calendarSync.js";
 import type * as events from "../events.js";
 import type * as integrations from "../integrations.js";
 import type * as meetings from "../meetings.js";
@@ -28,6 +29,7 @@ declare const fullApi: ApiFromModules<{
   agentActivity: typeof agentActivity;
   api: typeof api_;
   calendar: typeof calendar;
+  calendarSync: typeof calendarSync;
   events: typeof events;
   integrations: typeof integrations;
   meetings: typeof meetings;
