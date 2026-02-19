@@ -1,14 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "../../convex/_generated/api";
+
+// Mock data for now - will connect to Convex after Vercel setup
+const mockTasks = [
+  { _id: "1", title: "Setup Mission Control", status: "done", priority: "high", assignedTo: "max" },
+  { _id: "2", title: "Configure Convex Database", status: "doing", priority: "high", assignedTo: "max" },
+  { _id: "3", title: "Deploy to Vercel", status: "todo", priority: "high", assignedTo: "izaak" },
+  { _id: "4", title: "Integrate Calendar", status: "todo", priority: "medium", assignedTo: "max" },
+];
 
 export default function MissionControl() {
-  const tasks = useQuery(api.tasks.getAll) || [];
-  const createTask = useMutation(api.tasks.create);
-  const updateTask = useMutation(api.tasks.update);
-
+  const [tasks, setTasks] = useState(mockTasks);
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [selectedView, setSelectedView] = useState("tasks");
 
@@ -16,21 +19,23 @@ export default function MissionControl() {
   const doingTasks = tasks.filter((t) => t.status === "doing");
   const doneTasks = tasks.filter((t) => t.status === "done");
 
-  async function handleCreateTask(e: React.FormEvent) {
+  function handleCreateTask(e: React.FormEvent) {
     e.preventDefault();
     if (!newTaskTitle.trim()) return;
     
-    await createTask({
+    const newTask = {
+      _id: Date.now().toString(),
       title: newTaskTitle,
       status: "todo",
       priority: "medium",
       assignedTo: "izaak",
-    });
+    };
+    setTasks([...tasks, newTask]);
     setNewTaskTitle("");
   }
 
-  async function moveTask(id: string, newStatus: string) {
-    await updateTask({ id: id as any, status: newStatus });
+  function moveTask(id: string, newStatus: string) {
+    setTasks(tasks.map(t => t._id === id ? { ...t, status: newStatus } : t));
   }
 
   return (
@@ -112,6 +117,13 @@ export default function MissionControl() {
                 <span className="text-emerald-400 font-semibold">{doneTasks.length}</span>
               </div>
             </div>
+          </div>
+
+          {/* Mission */}
+          <div className="mt-6 p-4 bg-gradient-to-br from-indigo-500/10 to-emerald-500/10 rounded-lg border border-indigo-500/20">
+            <h3 className="text-sm font-semibold text-indigo-400 mb-2">🎯 Meta 2024</h3>
+            <p className="text-2xl font-bold text-white">$100M</p>
+            <p className="text-xs text-gray-500 mt-1">North Star Target</p>
           </div>
         </aside>
 
@@ -215,13 +227,13 @@ export default function MissionControl() {
 }
 
 function TaskCard({ task, onMove }: { task: any; onMove: (id: string, status: string) => void }) {
-  const priorityColors = {
+  const priorityColors: Record<string, string> = {
     low: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
     medium: "bg-amber-500/20 text-amber-400 border-amber-500/30",
     high: "bg-red-500/20 text-red-400 border-red-500/30",
   };
 
-  const nextStatus = {
+  const nextStatus: Record<string, string> = {
     todo: "doing",
     doing: "done",
     done: "todo",
@@ -231,7 +243,7 @@ function TaskCard({ task, onMove }: { task: any; onMove: (id: string, status: st
     <div className="bg-white/5 border border-white/10 rounded-lg p-3 hover:border-indigo-500/30 transition-colors group">
       <p className="text-sm text-white mb-2">{task.title}</p>
       <div className="flex items-center justify-between">
-        <span className={`text-xs px-2 py-1 rounded border ${priorityColors[task.priority as keyof typeof priorityColors]}`}>
+        <span className={`text-xs px-2 py-1 rounded border ${priorityColors[task.priority]}`}>
           {task.priority}
         </span>
         <div className="flex items-center gap-2">
@@ -239,7 +251,7 @@ function TaskCard({ task, onMove }: { task: any; onMove: (id: string, status: st
             {task.assignedTo === "max" ? "🤖" : "👤"}
           </span>
           <button
-            onClick={() => onMove(task._id, nextStatus[task.status as keyof typeof nextStatus])}
+            onClick={() => onMove(task._id, nextStatus[task.status])}
             className="text-xs bg-white/10 hover:bg-white/20 text-gray-400 hover:text-white px-2 py-1 rounded transition-colors opacity-0 group-hover:opacity-100"
           >
             Move →
