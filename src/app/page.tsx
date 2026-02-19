@@ -226,7 +226,7 @@ export default function MissionControl() {
   );
 }
 
-function TaskCard({ task, onMove }: { task: any; onMove: (id: string, status: string) => void }) {
+function TaskCard({ task, onMove }: { task: { _id: string; title: string; status: string; priority: string; assignedTo: string }; onMove: (id: string, status: string) => void }) {
   const priorityColors: Record<string, string> = {
     low: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
     medium: "bg-amber-500/20 text-amber-400 border-amber-500/30",
