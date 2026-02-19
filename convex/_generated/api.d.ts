@@ -10,9 +10,12 @@
 
 import type * as agentActivity from "../agentActivity.js";
 import type * as api_ from "../api.js";
+import type * as calendar from "../calendar.js";
 import type * as events from "../events.js";
 import type * as integrations from "../integrations.js";
+import type * as meetings from "../meetings.js";
 import type * as memories from "../memories.js";
+import type * as proactive from "../proactive.js";
 import type * as tasks from "../tasks.js";
 
 import type {
@@ -24,9 +27,12 @@ import type {
 declare const fullApi: ApiFromModules<{
   agentActivity: typeof agentActivity;
   api: typeof api_;
+  calendar: typeof calendar;
   events: typeof events;
   integrations: typeof integrations;
+  meetings: typeof meetings;
   memories: typeof memories;
+  proactive: typeof proactive;
   tasks: typeof tasks;
 }>;
 

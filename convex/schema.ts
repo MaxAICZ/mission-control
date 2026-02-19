@@ -13,6 +13,7 @@ export default defineSchema({
     updatedAt: v.number(),
     dueDate: v.optional(v.number()),
     tags: v.optional(v.array(v.string())),
+    source: v.optional(v.string()), // "manual", "meeting", "proactive"
   })
     .index("by_status", ["status"])
     .index("by_assigned", ["assignedTo"])
@@ -23,7 +24,7 @@ export default defineSchema({
     title: v.string(),
     content: v.string(),
     category: v.string(), // "decision", "preference", "project", "lesson", "context"
-    source: v.string(), // donde vino (email, chat, file)
+    source: v.string(), // donde vino (email, chat, file, meeting)
     importance: v.string(), // "low", "medium", "high", "critical"
     createdAt: v.number(),
     updatedAt: v.number(),
@@ -40,11 +41,48 @@ export default defineSchema({
     endTime: v.number(),
     attendees: v.array(v.string()),
     location: v.optional(v.string()),
+    meetLink: v.optional(v.string()),
     status: v.string(), // "scheduled", "confirmed", "cancelled"
+    hasRecording: v.optional(v.boolean()),
+    recordingAnalyzed: v.optional(v.boolean()),
+    insights: v.optional(v.string()),
     createdAt: v.number(),
   })
     .index("by_startTime", ["startTime"])
     .index("by_status", ["status"]),
+
+  meetings: defineTable({
+    eventId: v.id("events"),
+    transcript: v.string(),
+    summary: v.string(),
+    actionItems: v.array(v.string()),
+    insights: v.string(),
+    sentBy: v.string(),
+    receivedAt: v.number(),
+    processed: v.boolean(),
+    tasksCreated: v.optional(v.array(v.string())),
+    processedAt: v.optional(v.number()),
+    createdAt: v.number(),
+  })
+    .index("by_processed", ["processed"])
+    .index("by_received", ["receivedAt"]),
+
+  proactive: defineTable({
+    type: v.string(), // "task", "insight", "followup", "opportunity"
+    source: v.string(), // "meeting", "email", "calendar", "analysis"
+    title: v.string(),
+    description: v.string(),
+    reasoning: v.string(),
+    priority: v.string(), // "low", "medium", "high", "urgent"
+    autoExecute: v.boolean(),
+    executed: v.boolean(),
+    result: v.optional(v.string()),
+    executedAt: v.optional(v.number()),
+    createdAt: v.number(),
+  })
+    .index("by_executed", ["executed"])
+    .index("by_type", ["type"])
+    .index("by_priority", ["priority"]),
 
   agentActivity: defineTable({
     agentName: v.string(),
