@@ -1,14 +1,23 @@
-import { apiFromModules } from "convex/server";
-import * as tasks from "../tasks.js";
-import * as memories from "../memories.js";
-import * as events from "../events.js";
-import * as agentActivity from "../agentActivity.js";
-import * as integrations from "../integrations.js";
+/* eslint-disable */
+/**
+ * Generated `api` utility.
+ *
+ * THIS CODE IS AUTOMATICALLY GENERATED.
+ *
+ * To regenerate, run `npx convex dev`.
+ * @module
+ */
 
-export const api = apiFromModules({
-  tasks,
-  memories,
-  events,
-  agentActivity,
-  integrations,
-});
+import { anyApi, componentsGeneric } from "convex/server";
+
+/**
+ * A utility for referencing Convex functions in your app's API.
+ *
+ * Usage:
+ * ```js
+ * const myFunctionReference = api.myModule.myFunction;
+ * ```
+ */
+export const api = anyApi;
+export const internal = anyApi;
+export const components = componentsGeneric();
